@@ -1,0 +1,47 @@
+﻿@page "/todo"
+@using System.Collections.Generic
+
+<h3>TODO List</h3>
+
+<input @bind="newTaskTitle" placeholder="Task Title" />
+<input @bind="newTaskDescription" placeholder="Task Description" />
+<button @onclick="AddTask">Add Task</button>
+
+<ul>
+    @foreach (var task in tasks)
+    {
+        <li>
+            <input type="checkbox" @bind="task.IsCompleted" />
+            @task.Title - @task.Description
+            <button @onclick="() => RemoveTask(task)">Delete</button>
+        </li>
+    }
+</ul>
+
+@code {
+    private string newTaskTitle;
+    private string newTaskDescription;
+    private List<TaskItem> tasks = new List<TaskItem>();
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTaskTitle))
+        {
+            tasks.Add(new TaskItem { Title = newTaskTitle, Description = newTaskDescription });
+            newTaskTitle = string.Empty;
+            newTaskDescription = string.Empty;
+        }
+    }
+
+    private void RemoveTask(TaskItem task)
+    {
+        tasks.Remove(task);
+    }
+
+    private class TaskItem
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public bool IsCompleted { get; set; }
+    }
+}
