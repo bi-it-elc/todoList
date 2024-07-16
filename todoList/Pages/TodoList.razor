@@ -7,10 +7,16 @@
 <input @bind="newTaskDescription" placeholder="Task Description" />
 <button @onclick="AddTask">Add Task</button>
 
+<select @bind="newTaskPriority">
+    <option value="Low">Low</option>
+    <option value="Meidum"></option>
+    <option value="High"></option>
+</select>
+
 <ul>
     @foreach (var task in tasks)
     {
-        <li>
+        <li style="background-color: @(task.Priority == "High" ? "red" : task.Priority == "Medium" ? "yellow" : "green")" >
             <input type="checkbox" @bind="task.IsCompleted" />
             @task.Title - @task.Description
             <button @onclick="() => RemoveTask(task)">Delete</button>
@@ -21,15 +27,23 @@
 @code {
     private string newTaskTitle;
     private string newTaskDescription;
+    private string newTaskPriority;
+
     private List<TaskItem> tasks = new List<TaskItem>();
 
     private void AddTask()
     {
         if (!string.IsNullOrWhiteSpace(newTaskTitle))
         {
-            tasks.Add(new TaskItem { Title = newTaskTitle, Description = newTaskDescription });
+            tasks.Add(new TaskItem { 
+                Title = newTaskTitle, 
+                Description = newTaskDescription, 
+                Priority = newTaskPriority
+            });
+
             newTaskTitle = string.Empty;
             newTaskDescription = string.Empty;
+            newTaskPriority = string.Empty;
         }
     }
 
@@ -43,5 +57,6 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
+        public string Priority { get; set; }
     }
 }
